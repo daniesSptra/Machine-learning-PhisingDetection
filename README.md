@@ -4,7 +4,7 @@ Oleh:
 2. Danies Syabian Saputra
 
 ## Project Overview
-! [Phising]([https://money.kompas.com/read/2022/06/16/183024326/apa-itu-phising-definisi-cara-kerja-ciri-ciri-dan-cara-mencegahnya?page=all](https://asset.kompas.com/crops/P0LBY_ZXNMDxA7HLzHEKN6bnvKY=/0x0:708x472/1200x800/data/photo/2022/06/16/62ab128b16789.jpg))
+![Phising]([https://money.kompas.com/read/2022/06/16/183024326/apa-itu-phising-definisi-cara-kerja-ciri-ciri-dan-cara-mencegahnya?page=all](https://asset.kompas.com/crops/P0LBY_ZXNMDxA7HLzHEKN6bnvKY=/0x0:708x472/1200x800/data/photo/2022/06/16/62ab128b16789.jpg))
 
 Perkembangan internet yang semakin pesat menyebabkan meningkatnya jumlah serangan siber, salah satunya adalah phishing. Phishing merupakan teknik penipuan yang dilakukan dengan membuat situs web palsu yang menyerupai situs resmi untuk mencuri informasi sensitif pengguna, seperti username, password, data kartu kredit, dan informasi pribadi lainnya.
 
