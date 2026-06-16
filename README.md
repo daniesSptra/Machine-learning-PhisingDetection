@@ -1,4 +1,7 @@
 # Laporan Proyek Machine Learning - Deteksi URL Phishing Menggunakan Random Forest
+Oleh:
+1. Ferdian Maulidin
+2. Danies Syabian Saputra
 
 ## Project Overview
 
@@ -268,9 +271,8 @@ Data duplikat ditemukan dan dihapus pada tahap Data Preparation.
 ```python
 df.drop_duplicates(inplace=True)
 ```
-==================================================
+
 DATA DUPLIKAT
-==================================================
 Jumlah data duplikat : 0
 
 ## Outlier
@@ -426,6 +428,12 @@ Jumlah fitur akhir:
 
 ```text
 17 fitur
+```
+
+Dataset akhir:
+```python
+X = df[selected_features]
+y = df['status']
 ```
 
 # Modeling
