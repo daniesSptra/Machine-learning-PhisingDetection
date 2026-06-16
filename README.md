@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-Phishing merupakan salah satu bentuk serangan siber yang bertujuan memperoleh informasi sensitif pengguna seperti username, password, maupun data keuangan dengan menyamar sebagai situs web yang sah. Seiring meningkatnya penggunaan internet, jumlah situs phishing terus bertambah sehingga diperlukan sistem deteksi otomatis yang mampu mengidentifikasi URL berbahaya secara cepat dan akurat.
+Perkembangan internet yang semakin pesat menyebabkan meningkatnya jumlah serangan siber, salah satunya adalah phishing. Phishing merupakan teknik penipuan yang dilakukan dengan membuat situs web palsu yang menyerupai situs resmi untuk mencuri informasi sensitif pengguna, seperti username, password, data kartu kredit, dan informasi pribadi lainnya.
 
-Machine Learning dapat dimanfaatkan untuk mengidentifikasi pola-pola tertentu pada URL dan karakteristik website yang sering digunakan oleh pelaku phishing. Dengan memanfaatkan fitur-fitur tersebut, model dapat membedakan URL phishing dan legitimate.
+Banyak pengguna internet kesulitan membedakan URL asli dan URL phishing karena tampilan situs yang sangat mirip dengan situs resmi. Oleh karena itu, diperlukan sistem yang mampu melakukan klasifikasi URL secara otomatis untuk membantu pengguna mengidentifikasi potensi ancaman phishing sebelum mengakses suatu situs web.
 
-Pada proyek ini dibangun model klasifikasi menggunakan algoritma Random Forest untuk membedakan URL phishing dan legitimate berdasarkan fitur-fitur yang diekstraksi dari URL dan website.
+Pada proyek ini dibangun model Machine Learning menggunakan algoritma Random Forest untuk mengklasifikasikan URL menjadi kategori Legitimate atau Phishing berdasarkan karakteristik URL.
 
 ### Manfaat Proyek
 
@@ -14,7 +14,7 @@ Pada proyek ini dibangun model klasifikasi menggunakan algoritma Random Forest u
 * Mengurangi risiko pengguna mengakses situs berbahaya.
 * Mendukung pengembangan sistem keamanan siber berbasis Machine Learning.
 
-Referensi: [PHISING LINK DETECTION](https://jurnal.amikom.ac.id/index.php/intechno/article/view/1562)
+Foormat Referensi: [PHISING LINK DETECTION](https://jurnal.amikom.ac.id/index.php/intechno/article/view/1562)
 
 ---
 
@@ -23,7 +23,7 @@ Referensi: [PHISING LINK DETECTION](https://jurnal.amikom.ac.id/index.php/intech
 ## Problem Statements
 
 1. Bagaimana membangun model Machine Learning yang mampu mengklasifikasikan URL phishing dan legitimate?
-2. Fitur apa saja yang paling berpengaruh terhadap status phishing?
+2. Fitur URL apa saja yang paling berpengaruh dalam membedakan URL phishing dan legitimate?
 3. Seberapa baik performa algoritma Random Forest dalam mendeteksi URL phishing?
 
 ## Goals
@@ -41,6 +41,7 @@ Pendekatan yang digunakan dalam proyek ini meliputi:
 * Feature Selection berdasarkan nilai korelasi terhadap target.
 * Random Forest Classifier sebagai algoritma klasifikasi.
 * Evaluasi menggunakan Accuracy, Precision, Recall, dan F1-Score.
+* Deployment menggunakan Gradio dan Hugging Face Spaces
 
 ---
 
@@ -56,7 +57,12 @@ Dataset yang digunakan merupakan dataset URL phishing yang terdiri dari berbagai
 "Shape:", df.shape
 ```
 
-**Shape: (11430, 89)**
+| Keterangan   | Nilai  |
+| ------------ | ------ |
+| Jumlah Data  | 11.430 |
+| Jumlah Fitur | 89     |
+| Target       | status |
+
 
 ### Informasi Dataset
 
@@ -183,6 +189,28 @@ Dataset terdiri dari berbagai fitur numerik yang merepresentasikan karakteristik
 
 ---
 
+## Uraian Fitur yang Digunakan
+SIstem ini berfokus pada fitur URL-based detection sehingga hanya digunakan 17 fitur URL yang memiliki korelasi tertinggi terhadap target.
+
+| Fitur             | Deskripsi                           |
+| ----------------- | ----------------------------------- |
+| nb_www            | Jumlah kemunculan "www"             |
+| ratio_digits_url  | Rasio angka dalam URL               |
+| ip                | Penggunaan alamat IP                |
+| nb_qm             | Jumlah karakter (?)                 |
+| length_url        | Panjang URL                         |
+| nb_slash          | Jumlah karakter (/)                 |
+| nb_eq             | Jumlah karakter (=)                 |
+| length_hostname   | Panjang hostname                    |
+| ratio_digits_host | Rasio angka pada hostname           |
+| prefix_suffix     | Penggunaan tanda "-"                |
+| nb_dots           | Jumlah titik (.)                    |
+| nb_and            | Jumlah karakter (&)                 |
+| nb_com            | Jumlah kemunculan ".com"            |
+| nb_at             | Jumlah karakter (@)                 |
+| nb_subdomains     | Jumlah subdomain                    |
+| https_token       | Kemunculan kata https pada hostname |
+| nb_semicolumn     | Jumlah karakter (;)                 |
 
 ## Missing Values
 
@@ -197,8 +225,6 @@ df.isnull().sum()
 ```text
 Total Missing Values : 0
 ```
-
-### Ringkasan
 
 | Keterangan                | Nilai |
 | ------------------------- | ----- |
@@ -229,6 +255,36 @@ Dataset tidak memiliki nilai yang hilang (*missing values*) pada seluruh 89 fitu
 
 ---
 
+## Data Duplikat
+
+Dilakukan pemeriksaan data duplikat menggunakan:
+
+```python
+df.duplicated().sum()
+```
+
+Data duplikat ditemukan dan dihapus pada tahap Data Preparation.
+
+```python
+df.drop_duplicates(inplace=True)
+```
+==================================================
+DATA DUPLIKAT
+==================================================
+Jumlah data duplikat : 0
+
+## Outlier
+
+Outlier dianalisis menggunakan metode Interquartile Range (IQR) pada beberapa fitur utama seperti:
+
+* length_url
+* length_hostname
+* ratio_digits_url
+* ratio_digits_host
+* nb_dots
+
+![Outlier](assets/outlier.png)
+
 ## Distribusi Label
 
 ```python
@@ -251,7 +307,7 @@ phishing      5715
 Name: count, dtype: int64
 /tmp/ipykernel_2533/1605270780.py:6: FutureWarning: 
 
-📷 **Gambar 2. Distribusi Kelas Phishing dan Legitimate**
+![Outlier](assets/distirbusi_label.png)
 
 ### Hasil Analisis
 
@@ -297,6 +353,35 @@ Karena dataset tidak memiliki missing value, jumlah data tidak berubah setelah p
 
 ---
 
+### Menghapus Data Duplikat
+
+```python
+df.drop_duplicates(inplace=True)
+```
+
+### Encoding Target
+
+```python
+LabelEncoder()
+```
+
+Hasil encoding:
+
+| Label Asli | Hasil |
+| ---------- | ----- |
+| legitimate | 0     |
+| phishing   | 1     |
+
+### Menghapus Kolom URL
+
+Kolom URL tidak digunakan secara langsung karena model menggunakan fitur numerik hasil ekstraksi URL.
+
+```python
+df.drop(columns=['url'])
+```
+
+---
+
 ## Feature Engineering
 
 Pada tahap ini dilakukan analisis korelasi untuk mengetahui hubungan masing-masing fitur terhadap target `status`.
@@ -314,32 +399,14 @@ corr_status = corr_matrix['status'].sort_values(
 ### Hasil Korelasi Tertinggi
 
 | Fitur            | Korelasi |
-| ---------------- | -------: |
-| google_index     |    0.731 |
-| page_rank        |    0.511 |
-| nb_www           |    0.443 |
-| ratio_digits_url |    0.356 |
-| domain_in_title  |    0.343 |
-| nb_hyperlinks    |    0.343 |
-| phish_hints      |    0.335 |
-| domain_age       |    0.332 |
-| ip               |    0.322 |
+| ---------------- | -------- |
+| nb_www           | 0.438    |
+| ratio_digits_url | 0.356    |
+| ip               | 0.324    |
+| nb_qm            | 0.298    |
+| length_url       | 0.253    |
 
-### Visualisasi Korelasi
-
-```python
-corr_status.drop('status').sort_values().plot(
-    kind='barh'
-)
-```
-
-📷 **Gambar 3. Korelasi Fitur terhadap Status**
-
-*(Masukkan grafik korelasi fitur terhadap target)*
-
-### Hasil Analisis
-
-Berdasarkan hasil analisis korelasi, fitur `google_index` memiliki korelasi tertinggi terhadap status phishing sebesar 0.731. Selain itu, fitur `page_rank`, `nb_www`, dan `ratio_digits_url` juga menunjukkan hubungan yang cukup kuat terhadap target.
+![Outlier](assets/korelasi.png)
 
 ---
 
@@ -354,85 +421,22 @@ selected_features = corr_abs[
 
 selected_features = selected_features.drop('status')
 ```
+Dipilih 17 fitur URL yang memiliki korelasi tertinggi terhadap target.
 
-### Fitur Terpilih
+Jumlah fitur akhir:
 
-* google_index
-* page_rank
-* nb_www
-* ratio_digits_url
-* domain_in_title
-* nb_hyperlinks
-* phish_hints
-* domain_age
-* ip
-* nb_qm
-* length_url
-* ratio_intHyperlinks
-* nb_slash
-* length_hostname
-* nb_eq
-* ratio_digits_host
-* shortest_word_host
-* prefix_suffix
-* longest_word_path
-
-Jumlah fitur hasil seleksi: **19 fitur**
-
-### Uraian Fitur
-| Fitur | Deskripsi |
-|---------|---------|
-| google_index | Status website terindeks Google |
-| page_rank | Nilai PageRank website |
-| nb_www | Jumlah kemunculan kata "www" |
-| ratio_digits_url | Rasio angka terhadap panjang URL |
-| domain_in_title | Kesesuaian domain dengan judul halaman |
-| nb_hyperlinks | Jumlah hyperlink pada halaman |
-| phish_hints | Indikator karakteristik phishing |
-| domain_age | Umur domain |
-| ip | Penggunaan alamat IP pada URL |
-| nb_qm | Jumlah karakter tanda tanya (?) |
-| length_url | Panjang URL |
-| ratio_intHyperlinks | Rasio hyperlink internal |
-| nb_slash | Jumlah karakter "/" |
-| length_hostname | Panjang hostname |
-| nb_eq | Jumlah karakter "=" |
-| ratio_digits_host | Rasio angka pada hostname |
-| shortest_word_host | Panjang kata terpendek pada hostname |
-| prefix_suffix | Penggunaan tanda "-" pada domain |
-| longest_word_path | Panjang kata terpanjang pada path URL |
-
-### Dataset Akhir
-
-```python
-X = df[selected_features]
-y = df['status']
+```text
+17 fitur
 ```
-
----
 
 # Modeling
 
-## Pembagian Dataset
+## Algoritma
 
-Dataset dibagi menjadi data latih dan data uji menggunakan rasio 80:20.
-
-```python
-from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42,
-    stratify=y
-)
-```
-
-## Algoritma Random Forest
+Model yang digunakan adalah Random Forest Classifier.
 
 ```python
-rf = RandomForestClassifier(
+RandomForestClassifier(
     n_estimators=200,
     random_state=42
 )
@@ -442,126 +446,123 @@ rf = RandomForestClassifier(
 
 Random Forest dipilih karena mampu menangani data berdimensi tinggi, mengurangi risiko overfitting, serta menyediakan informasi feature importance yang berguna dalam proses analisis fitur.
 
-## Training Model
+
+## Data Splitting
+
+Dataset dibagi menjadi:
+
+* 80% Training Data
+* 20% Testing Data
 
 ```python
-rf.fit(X_train, y_train)
-```
-
-## Prediksi
-
-```python
-y_pred = rf.predict(X_test)
+train_test_split(
+    test_size=0.2,
+    stratify=y
+)
 ```
 
 ---
 
 # Evaluation
 
-Evaluasi dilakukan menggunakan metrik Accuracy, Precision, Recall, dan F1-Score.
+Evaluasi model dilakukan menggunakan:
+
+* Accuracy
+* Precision
+* Recall
+* F1-Score
+* Confusion Matrix
 
 ## Hasil Evaluasi
 
-| Metrik    |  Nilai |
-| --------- | -----: |
-| Accuracy  | 95.93% |
-| Precision | 95.42% |
-| Recall    | 96.50% |
-| F1-Score  | 95.95% |
-
-### Interpretasi Hasil
-
-* Accuracy sebesar 95.93% menunjukkan bahwa model mampu mengklasifikasikan URL dengan benar pada sebagian besar data uji.
-* Precision sebesar 95.42% menunjukkan bahwa mayoritas URL yang diprediksi sebagai phishing memang benar merupakan phishing.
-* Recall sebesar 96.50% menunjukkan bahwa model berhasil mendeteksi sebagian besar URL phishing yang terdapat pada dataset.
-* F1-Score sebesar 95.95% menunjukkan keseimbangan yang baik antara precision dan recall.
-
----
+| Metrik    | Nilai  |
+| --------- | ------ |
+| Accuracy  | 0.9593 |
+| Precision | 0.9541 |
+| Recall    | 0.9650 |
+| F1 Score  | 0.9595 |
 
 ## Classification Report
 
-📷 **Gambar 4. Classification Report**
+| Class      | Precision | Recall | F1-Score |
+| ---------- | --------- | ------ | -------- |
+| Legitimate | 0.96      | 0.95   | 0.96     |
+| Phishing   | 0.95      | 0.97   | 0.96     |
 
-*(Masukkan screenshot output classification report)*
-
----
 
 ## Confusion Matrix
 
-📷 **Gambar 5. Confusion Matrix**
-
-*(Masukkan gambar confusion matrix dari notebook)*
-
-### Analisis Confusion Matrix
-
-| Actual     | Predicted Legitimate | Predicted Phishing |
-| ---------- | -------------------: | -----------------: |
-| Legitimate |                 1090 |                 53 |
-| Phishing   |                   40 |               1103 |
-
-Model berhasil mengklasifikasikan 1090 URL legitimate dan 1103 URL phishing dengan benar. Terdapat 53 kasus False Positive dan 40 kasus False Negative.
-
-Jumlah False Negative yang relatif rendah menunjukkan bahwa model memiliki kemampuan yang baik dalam mendeteksi URL phishing sehingga cocok digunakan sebagai sistem pendukung deteksi ancaman siber.
-
----
+![Outlier](assets/confusion_matrix.png)
 
 ## Feature Importance
 
-```python
-importance = pd.DataFrame({
-    'Feature': X.columns,
-    'Importance': rf.feature_importances_
-})
-```
+Fitur yang paling berpengaruh berdasarkan Random Forest:
 
-📷 **Gambar 6. Feature Importance Random Forest**
+1. ratio_digits_url
+2. length_url
+3. length_hostname
+4. nb_qm
+5. prefix_suffix
 
-*(Masukkan grafik Top 15 Feature Importance)*
-
-### Analisis Feature Importance
-
-Fitur dengan nilai importance tertinggi merupakan fitur yang paling berkontribusi dalam proses klasifikasi URL phishing. Hasil ini memperkuat analisis korelasi yang telah dilakukan pada tahap feature engineering.
+![Outlier](assets/feature_importance.png)
 
 ---
 
 # Deployment
 
-Tahap deployment dilakukan dengan menyimpan model menggunakan library Pickle sehingga model dapat digunakan kembali tanpa perlu melakukan proses pelatihan ulang.
-
-## Menyimpan Model
+Model yang telah dilatih disimpan menggunakan format Pickle (.pkl).
 
 ```python
-import pickle
-
-with open('phishing_model.pkl', 'wb') as file:
-    pickle.dump(rf, file)
+pickle.dump(rf, file)
 ```
 
-## Memuat Model
+File model:
 
-```python
-with open('phishing_model.pkl', 'rb') as file:
-    model = pickle.load(file)
+```text
+url_phishing_model.pkl
 ```
 
-## Simulasi Prediksi
+## Gradio Interface
 
-```python
-sample = X.iloc[[0]]
+Aplikasi web dibangun menggunakan Gradio untuk memungkinkan pengguna melakukan prediksi secara langsung dengan memasukkan URL.
 
-prediction = model.predict(sample)
+Fitur:
 
-print(prediction)
+* Input URL
+* Ekstraksi fitur otomatis
+* Prediksi phishing atau legitimate
+* Tampilan hasil secara real-time
+
+## Hugging Face Spaces
+
+Aplikasi berhasil di-deploy menggunakan Hugging Face Spaces sehingga dapat diakses melalui browser tanpa instalasi tambahan.
+
+### URL Deployment
+
+```text
+https://huggingface.co/spaces/daniessbynsptr/phishing-url-detector
 ```
 
-Model yang telah disimpan dapat diintegrasikan ke dalam aplikasi web, API, maupun sistem keamanan siber untuk melakukan deteksi URL phishing secara otomatis.
+
+### Contoh Pengujian
+
+| URL                                     | Prediksi   |
+| --------------------------------------- | ---------- |
+| https://google.com                      | Legitimate |
+| http://paypal-login-security-update.com | Phishing   |
+| https://verify-account-google.com/login | Phishing   |
 
 ---
 
-# Conclusion
+# Kesimpulan
 
-Pada proyek ini berhasil dibangun model klasifikasi URL phishing menggunakan algoritma Random Forest dengan pendekatan CRISP-DM. Tahap feature engineering menunjukkan bahwa fitur seperti `google_index`, `page_rank`, `nb_www`, `ratio_digits_url`, dan `domain_in_title` memiliki hubungan yang cukup kuat terhadap status phishing.
+Model Random Forest berhasil digunakan untuk mendeteksi URL phishing berdasarkan karakteristik URL dengan performa yang sangat baik.
 
-Model Random Forest yang dibangun menggunakan 19 fitur hasil seleksi berhasil memperoleh Accuracy sebesar **95.93%**, Precision sebesar **95.42%**, Recall sebesar **96.50%**, dan F1-Score sebesar **95.95%**.
+Hasil evaluasi menunjukkan:
 
-Berdasarkan hasil evaluasi tersebut dapat disimpulkan bahwa algoritma Random Forest mampu mengklasifikasikan URL phishing dan legitimate secara efektif sehingga berpotensi digunakan sebagai dasar pengembangan sistem deteksi phishing otomatis di masa mendatang.
+* Accuracy : 95.93%
+* Precision : 95.41%
+* Recall : 96.50%
+* F1 Score : 95.95%
+
+Model berhasil diimplementasikan dalam bentuk aplikasi web menggunakan Gradio dan telah di-deploy ke Hugging Face Spaces sehingga dapat digunakan secara online untuk melakukan deteksi URL phishing secara real-time.
