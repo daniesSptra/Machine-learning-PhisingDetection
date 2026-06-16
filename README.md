@@ -400,11 +400,10 @@ corr_status = corr_matrix['status'].sort_values(
 
 | Fitur            | Korelasi |
 | ---------------- | -------- |
-| nb_www           | 0.438    |
 | ratio_digits_url | 0.356    |
 | ip               | 0.324    |
 | nb_qm            | 0.298    |
-| length_url       | 0.253    |
+| length_url       | 0.253    |    |
 
 ![Outlier](assets/korelasi.png)
 
