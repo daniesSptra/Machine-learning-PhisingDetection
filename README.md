@@ -4,6 +4,7 @@ Oleh:
 2. Danies Syabian Saputra
 
 ## Project Overview
+! [Phising](https://money.kompas.com/read/2022/06/16/183024326/apa-itu-phising-definisi-cara-kerja-ciri-ciri-dan-cara-mencegahnya?page=all)
 
 Perkembangan internet yang semakin pesat menyebabkan meningkatnya jumlah serangan siber, salah satunya adalah phishing. Phishing merupakan teknik penipuan yang dilakukan dengan membuat situs web palsu yang menyerupai situs resmi untuk mencuri informasi sensitif pengguna, seperti username, password, data kartu kredit, dan informasi pribadi lainnya.
 
@@ -482,20 +483,32 @@ Evaluasi model dilakukan menggunakan:
 
 ## Hasil Evaluasi
 
-| Metrik    | Nilai  |
-| --------- | ------ |
-| Accuracy  | 0.9593 |
-| Precision | 0.9541 |
-| Recall    | 0.9650 |
-| F1 Score  | 0.9595 |
+| Metric | Nilai |
+|----------|---------|
+| Accuracy | 0.8613 |
+| Precision | 0.8585 |
+| Recall | 0.8653 |
+| F1-Score | 0.8619 |
 
 ## Classification Report
 
-| Class      | Precision | Recall | F1-Score |
-| ---------- | --------- | ------ | -------- |
-| Legitimate | 0.96      | 0.95   | 0.96     |
-| Phishing   | 0.95      | 0.97   | 0.96     |
+## Classification Report
 
+Hasil evaluasi model menggunakan Classification Report ditunjukkan pada tabel berikut.
+
+| Kelas                | Precision | Recall | F1-Score | Support  |
+| -------------------- | --------- | ------ | -------- | -------- |
+| Legitimate (0)       | 0.86      | 0.86   | 0.86     | 1143     |
+| Phishing (1)         | 0.86      | 0.87   | 0.86     | 1143     |
+| **Accuracy**         | -         | -      | **0.86** | **2286** |
+| **Macro Average**    | 0.86      | 0.86   | 0.86     | 2286     |
+| **Weighted Average** | 0.86      | 0.86   | 0.86     | 2286     |
+
+Berdasarkan hasil Classification Report, model menunjukkan performa yang cukup baik dalam mengklasifikasikan URL legitimate maupun phishing. Nilai precision pada kedua kelas berada di sekitar 86%, yang menunjukkan bahwa sebagian besar prediksi yang dihasilkan model sudah sesuai dengan label sebenarnya.
+
+Nilai recall untuk kelas phishing sebesar 87% menunjukkan bahwa model mampu mendeteksi sebagian besar URL phishing yang terdapat pada data pengujian. Selain itu, nilai F1-Score sebesar 86% pada kedua kelas menunjukkan keseimbangan yang baik antara precision dan recall.
+
+Distribusi support yang sama pada kedua kelas (1143 data legitimate dan 1143 data phishing) menunjukkan bahwa proses evaluasi dilakukan pada dataset yang seimbang sehingga hasil pengukuran performa model dapat dianggap lebih representatif.
 
 ## Confusion Matrix
 
@@ -567,9 +580,9 @@ Model Random Forest berhasil digunakan untuk mendeteksi URL phishing berdasarkan
 
 Hasil evaluasi menunjukkan:
 
-* Accuracy : 95.93%
-* Precision : 95.41%
-* Recall : 96.50%
-* F1 Score : 95.95%
+- Accuracy sebesar 86,13%.
+- Precision sebesar 85,85%.
+- Recall sebesar 86,53%.
+- F1-Score sebesar 86,19%.
 
 Model berhasil diimplementasikan dalam bentuk aplikasi web menggunakan Gradio dan telah di-deploy ke Hugging Face Spaces sehingga dapat digunakan secara online untuk melakukan deteksi URL phishing secara real-time.
